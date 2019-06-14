@@ -9,11 +9,11 @@ export const authStart = () => {
     };
 };
 
-export const authSuccess = (authData) => {
+export const authSuccess = (token, userID) => {
     return {
         type: actionTypes.AUTH_SUCCESS,
-        userID: authData.localId,
-        token: authData.idToken,
+        token,
+        userID
     }
 };
 
@@ -25,6 +25,10 @@ export const authFail = error => {
 };
 
 export const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('expirationDate');
+    localStorage.removeItem('userID');
+    
     return {
         type: actionTypes.AUTH_LOGOUT
     }
@@ -55,7 +59,13 @@ export const auth = (email, password, isSignupMode) => dispatch => {
     Axios.post(url, authData)
         .then(respond => {
             console.log(respond);
-            dispatch(authSuccess(respond.data));
+            const expirationDate = new Date(new Date().getTime() + respond.data.expiresIn * 1000);
+
+            localStorage.setItem('token', respond.data.idToken);
+            localStorage.setItem('expirationDate', expirationDate);
+            localStorage.setItem('userID', respond.data.localId);
+
+            dispatch(authSuccess(respond.data.idToken, respond.data.localId));
             dispatch(authLogoutTimer(respond.data.expiresIn));
         })
         .catch(error => {
@@ -63,3 +73,31 @@ export const auth = (email, password, isSignupMode) => dispatch => {
             dispatch(authFail(error.response.data.error));
         });
 };
+
+export const setAuthRedirectPath = authRedirectPath => {
+    return {
+        type: actionTypes.SET_AUTH_REDIRECT_PATH,
+        authRedirectPath
+    }
+}
+
+export const authCheckLocalStorage = () => dispatch => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        logout();
+    }
+    else {
+        const expirationDate = new Date(localStorage.getItem('expirationDate'));
+        const expirationTimeInSeconds = (expirationDate - new Date()) / 1000;
+
+        if (new Date() > expirationDate) {
+            logout();
+        }
+        else {
+            const userID = localStorage.getItem('userID');
+            dispatch(authSuccess(token, userID));
+            dispatch(authLogoutTimer(expirationTimeInSeconds));
+        }
+    }
+}

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 
 import Layout from './hoc/Layout/Layout';
@@ -7,9 +8,16 @@ import Checkout from './containers/Checkout/Checkout';
 import Orders from './containers/Orders/Orders';
 import Auth from './containers/Auth/Auth';
 import Logout from './containers/Logout/Logout';
+import * as actions from './store/actions/index';
 
 class App extends Component {
-  render () {
+  constructor(props) {
+    super(props);
+    props.onAuthCheckLocalStorage();
+  };
+
+  render() {
+    console.log('[App.js] rendering...');
     return (
       <div>
         <Layout>
@@ -26,4 +34,11 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapDispatchToProps = dispatch => {
+  return {
+    onAuthCheckLocalStorage: () => dispatch(actions.authCheckLocalStorage())
+  }
+}
+
+export default connect(null, mapDispatchToProps)(App);
+// export default App;
