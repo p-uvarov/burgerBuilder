@@ -4,7 +4,6 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 
 import Layout from './hoc/Layout/Layout';
 import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
-import Auth from './containers/Auth/Auth';
 import Logout from './containers/Logout/Logout';
 import * as actions from './store/actions/index';
 import Spinner from './components/UI/Spinner/Spinner';
@@ -12,6 +11,7 @@ import Spinner from './components/UI/Spinner/Spinner';
 //Lazy loading Components
 const Orders = React.lazy(() => import('./containers/Orders/Orders'));
 const Checkout = React.lazy(() => import('./containers/Checkout/Checkout'));
+const Auth = React.lazy(() => import('./containers/Auth/Auth'));
 
 class App extends Component {
   constructor(props) {
@@ -30,23 +30,23 @@ class App extends Component {
 
     if (this.props.isAuth) {
       routes = (
-        <Suspense fallback={<Spinner />}>
-          <Switch>
-            <Route path="/checkout" component={Checkout} />
-            <Route path="/orders" component={Orders} />
-            <Route path="/logout" component={Logout} />
-            <Route path="/" exact component={BurgerBuilder} />
-            <Redirect from="/auth" to="/checkout" />
-            <Redirect to="/" />
-          </Switch>
-        </Suspense>
+        <Switch>
+          <Route path="/checkout" component={Checkout} />
+          <Route path="/orders" component={Orders} />
+          <Route path="/logout" component={Logout} />
+          <Route path="/" exact component={BurgerBuilder} />
+          <Route path='/auth' component={Auth} />
+          <Redirect to="/" />
+        </Switch>
       );
     }
 
     return (
       <div>
         <Layout>
-          {routes}
+          <Suspense fallback={<Spinner />}>
+            {routes}
+          </Suspense>
         </Layout>
       </div>
     );
@@ -55,7 +55,8 @@ class App extends Component {
 
 const mapStateToProps = state => {
   return {
-    isAuth: state.auth.token !== null
+    isAuth: state.auth.token !== null,
+    authRedirectPath: state.auth.authRedirectPath
   }
 }
 
