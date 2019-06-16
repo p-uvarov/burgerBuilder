@@ -111,7 +111,6 @@ class Auth extends Component {
                 <p style={{ color: 'red', fontWeight: 'bold' }}>{this.props.error.message}</p>
             );
         }
-
         const formElementsArr = [];
         for (let key in this.state.authForm) {
             formElementsArr.push({
