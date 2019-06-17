@@ -1,0 +1,6 @@
+DirectoryIndex /burger-builder/index.html
+ErrorDocument 400 /burger-builder/index.html
+ErrorDocument 401 /burger-builder/index.html
+ErrorDocument 403 /burger-builder/index.html
+ErrorDocument 404 /burger-builder/index.html
+ErrorDocument 500 /burger-builder/index.html
