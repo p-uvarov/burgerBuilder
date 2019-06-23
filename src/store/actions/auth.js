@@ -56,23 +56,8 @@ export const setAuthRedirectPath = authRedirectPath => {
     }
 }
 
-export const authCheckLocalStorage = () => dispatch => {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-        dispatch(logout());
+export const authCheckLocalStorage = () => {
+    return {
+        type: actionTypes.AUTH_CHECK_LOCAL_STORAGE
     }
-    else {
-        const expirationDate = new Date(localStorage.getItem('expirationDate'));
-        const expirationTimeInSeconds = (expirationDate - new Date()) / 1000;
-
-        if (new Date() > expirationDate) {
-            dispatch(logout());
-        }
-        else {
-            const userID = localStorage.getItem('userID');
-            dispatch(authSuccess(token, userID));
-            dispatch(authLogoutTimer(expirationTimeInSeconds));
-        }
-    }
-}
+};
