@@ -25,7 +25,14 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+      "plugins": [
+        "react-hooks"
+      ],
+      "rules": {
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn"
+      }
   },
   "browserslist": {
     "production": [
@@ -39,5 +46,8 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "."
+  "homepage": ".",
+  "devDependencies": {
+    "eslint-plugin-react-hooks": "^1.6.0"
+  }
 }
