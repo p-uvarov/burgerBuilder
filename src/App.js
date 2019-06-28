@@ -1,10 +1,10 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 import Layout from './hoc/Layout/Layout';
 import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
-import Logout from './containers/Logout/Logout';
+import Logout from './containers/Auth/Logout/Logout';
 import * as actions from './store/actions/index';
 import Spinner from './components/UI/Spinner/Spinner';
 
@@ -14,7 +14,10 @@ const Checkout = React.lazy(() => import('./containers/Checkout/Checkout'));
 const Auth = React.lazy(() => import('./containers/Auth/Auth'));
 
 const App = props => {
-  props.onAuthCheckLocalStorage();
+  useEffect(() => {
+    props.onAuthCheckLocalStorage();
+    // eslint-disable-next-line
+  }, []);
 
   let routes = (
     <Switch>
