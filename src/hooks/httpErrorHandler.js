@@ -14,7 +14,6 @@ const useHttpErrorHandler = axios => {
 
     useEffect(() => {
         return () => {
-            console.log('Clean up work with Interceptors...');
             axios.interceptors.request.eject(reqInterceptor);
             axios.interceptors.response.eject(resInterceptor);
         };
